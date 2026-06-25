@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portugal NOP — Projectdashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f3ef;color:#1a1a1a;padding:24px 16px 60px;}
+.wrap{max-width:1100px;margin:0 auto;}
+.top{margin-bottom:20px;}
+.top h1{font-size:22px;font-weight:600;color:#0F4C5C;}
+.top p{font-size:13px;color:#777;margin-top:4px;}
+.tabs{display:flex;gap:4px;border-bottom:2px solid #ddd;margin-bottom:24px;overflow-x:auto;}
+.tab{padding:10px 18px;font-size:14px;font-weight:500;color:#888;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;background:none;border:none;white-space:nowrap;}
+.tab.active{color:#0F4C5C;border-bottom-color:#0F4C5C;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* Tab 1: takenlijst */
+.phase{background:#fff;border:1px solid #e2e0d8;border-radius:10px;margin-bottom:12px;overflow:hidden;}
+.phase-hdr{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;background:#fafaf7;}
+.phase-num{width:26px;height:26px;border-radius:50%;background:#1B6E8C;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.phase-title{font-size:14px;font-weight:600;flex:1;}
+.phase-meta{font-size:11px;color:#999;}
+.phase-body{padding:0 16px 16px 54px;display:none;}
+.phase.open .phase-body{display:block;}
+.task{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#444;}
+.task-dot{width:6px;height:6px;border-radius:50%;background:#bbb;margin-top:6px;flex-shrink:0;}
+.task-check{color:#1B6E8C;font-size:14px;margin-top:1px;flex-shrink:0;font-weight:700;}
+.task.done{color:#888;}
+.note{font-size:12px;color:#a06b00;background:#fff8e8;border:1px solid #f0dca0;border-radius:6px;padding:8px 10px;margin-top:8px;}
+.note.warn{color:#a02020;background:#fdeeee;border-color:#f0c0c0;}
+.note.info{color:#0F4C5C;background:#e9f2f5;border-color:#bcd8e0;}
+.status-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px;margin-left:8px;flex-shrink:0;}
+.status-done{background:#e1f5ee;color:#0f6e56;}
+.status-progress{background:#faeeda;color:#854f0b;}
+.status-todo{background:#f1efe8;color:#5f5e5a;}
+.status-blocked{background:#fdeeee;color:#a02020;}
+.phase-num.done{background:#1D9E75;}
+.phase-num.blocked{background:#c0504d;}
+
+/* Tab 2: open vragen / besluiten */
+.qa-wrap{background:#fff;border:1px solid #e2e0d8;border-radius:10px;padding:20px;}
+.qa-item{padding:14px 0;border-bottom:1px solid #eee;}
+.qa-item:last-child{border-bottom:none;}
+.qa-q{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:4px;}
+.qa-a{font-size:13px;color:#666;}
+.qa-tag{font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:5px;margin-right:8px;}
+.qa-tag.open{background:#fdeeee;color:#a02020;}
+.qa-tag.decided{background:#e1f5ee;color:#0f6e56;}
+.qa-tag.backlog{background:#f1efe8;color:#5f5e5a;}
+
+/* Tab 3: gantt */
+.gantt-wrap{background:#fff;border:1px solid #e2e0d8;border-radius:10px;padding:16px;overflow-x:auto;position:relative;}
+.gantt{border-collapse:collapse;font-size:12px;position:relative;}
+.gantt th{font-weight:500;color:#888;padding:2px 1px;text-align:center;font-size:10px;}
+.gantt th.daylabel{border-bottom:1px solid #eee;min-width:30px;}
+.gantt td.label{text-align:left;font-size:12px;padding:6px 10px;white-space:nowrap;color:#333;border-right:1px solid #eee;position:sticky;left:0;background:#fff;min-width:230px;}
+.gantt td{padding:0;height:30px;border-bottom:1px solid #f2f2f2;position:relative;min-width:30px;}
+.bar{height:18px;border-radius:4px;margin:6px 1px;}
+.bar.done{background:#1D9E75;}
+.legend{display:flex;gap:16px;margin-top:16px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#666;}
+.legend-dot{width:10px;height:10px;border-radius:3px;}
+.gantt-meta{font-size:12px;color:#888;margin-bottom:12px;}
+.today-line{position:absolute;top:36px;bottom:16px;width:2px;background:#d23a3a;z-index:5;}
+.today-label{position:absolute;top:18px;font-size:10px;color:#d23a3a;font-weight:600;white-space:nowrap;transform:translateX(-50%);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>Portugal NOP — Projectdashboard</h1>
+    <p>Gastensite vakantiehuisje Carvoeiro · Jefferson Synapps · bijgewerkt 25 juni 2026</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="taken">Takenlijst</button>
+    <button class="tab" data-tab="vragen">Open vragen &amp; besluiten</button>
+    <button class="tab" data-tab="gantt">Planning</button>
+  </div>
+
+  <!-- TAB 1: TAKENLIJST -->
+  <div class="panel active" id="taken">
+    <div id="phase-list"></div>
+  </div>
+
+  <!-- TAB 2: OPEN VRAGEN & BESLUITEN -->
+  <div class="panel" id="vragen">
+    <div class="qa-wrap" id="qa-list"></div>
+  </div>
+
+  <!-- TAB 3: GANTT -->
+  <div class="panel" id="gantt">
+    <div class="gantt-meta">Indicatieve planning · elke kolom = 1 dag · geen vaste deadline, klantgestuurd tempo</div>
+    <div class="gantt-wrap" id="gantt-wrap">
+      <div id="gantt-table"></div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div>Afgerond</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#7F77DD"></div>Nog te doen</div>
+      <div class="legend-item" style="color:#d23a3a">| Vandaag (25 juni 2026)</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const phases = [
+  {
+    title: "Fase 0 — Re-design: ontwerp echt scherp krijgen",
+    meta: "huidige opzet was te standaard, eerst dit",
+    status: "progress",
+    startDay: 0,
+    lengthDays: 2,
+    tasks: [
+      { text: "Klant bevragen op échte sfeer: foto's van het huisje, eigen stijlvoorkeur, hoe formeel/informeel" },
+      { text: "Concreet design-plan maken: kleurenpalet (4-6 hex), typografie (2 lettertype-rollen), layout-concept" },
+      { text: "Signature element bepalen dat uit Carvoeiro/Algarve zelf komt, niet generiek toeristisch" },
+      { text: "Plan toetsen: zou dit ook uit een willekeurige 'maak een vakantiesite' prompt rollen? Zo ja, herzien" },
+      { text: "Pas na akkoord op planrichting: bouwen" }
+    ],
+    note: "Het eerste concept (azulejo-band, kalkwit-blauw) is een logische maar voorspelbare keuze voor Portugal. Niet per se fout, maar nog niet onderscheidend genoeg — voelt als 'AI maakt Portugal-site' in plaats van 'dit specifieke huisje in Carvoeiro'.",
+    noteType: "info"
+  },
+  {
+    title: "Inhoud & links finaliseren",
+    meta: "afhankelijk van klant",
+    status: "blocked",
+    startDay: 2,
+    lengthDays: 2,
+    tasks: [
+      { text: "Echte Instagram-accounts van de klant ontvangen (nu nog placeholder)" },
+      { text: "GetYourGuide: klant vraagt of hij eigen affiliate-account heeft of wil aanmaken" },
+      { text: "Zest Car Rental affiliate-link laten testen door klant zelf (zijn eigen tracking-ID)" },
+      { text: "Foto's van het huisje en omgeving verzamelen voor echte sfeerbeelden i.p.v. illustraties" }
+    ],
+    note: "Geblokkeerd tot klant antwoord geeft — zet dit als losse vraag naar hem uit, geen reden om te wachten met fase 0/1.",
+    noteType: "warn"
+  },
+  {
+    title: "Bouwen v2",
+    meta: "met definitief design",
+    status: "todo",
+    startDay: 4,
+    lengthDays: 2,
+    tasks: [
+      { text: "Volledige pagina bouwen volgens herzien design-plan" },
+      { text: "Responsief testen (mobiel is hoofdgebruik via QR-code)" },
+      { text: "Alle secties uit WhatsApp-input verwerken: boodschappen, eten, borrel, te doen (3 afstandscategorieën), shoppen, excursies, vervoer, inspiratie" }
+    ]
+  },
+  {
+    title: "Publiceren & QR-code",
+    meta: "levering aan klant",
+    status: "todo",
+    startDay: 6,
+    lengthDays: 1,
+    tasks: [
+      { text: "Nieuwe GitHub-repo aanmaken + GitHub Pages aanzetten" },
+      { text: "Live-URL testen op telefoon" },
+      { text: "QR-code genereren (downloadbaar + printvariant voor in het huisje)" },
+      { text: "Concept-link + QR-code naar klant sturen via WhatsApp" }
+    ]
+  },
+  {
+    title: "Backlog — later, niet nu",
+    meta: "expliciet uitgesteld, met klant akkoord",
+    status: "todo",
+    startDay: 0,
+    lengthDays: 0,
+    tasks: [
+      { text: "Koppeling met reserveringssysteem" },
+      { text: "Eigen domeinnaam i.p.v. github.io" },
+      { text: "Gastenboek-functionaliteit" },
+      { text: "Korting-voor-boeker / cashback-affiliatie structuur uitwerken" },
+      { text: "Meertalig (NL/EN/PT) indien klant dat wil voor internationale gasten" }
+    ]
+  }
+];
+
+const qaItems = [
+  {
+    tag: "open", tagLabel: "open",
+    q: "Wat is de échte sfeer van het huisje?",
+    a: "Klant heeft tekst-input gegeven (lijstjes), geen foto's of stijlvoorkeur. Nodig voor een ontwerp dat niet generiek 'Portugal' aanvoelt maar specifiek voor dit huisje en deze gasten."
+  },
+  {
+    tag: "open", tagLabel: "open",
+    q: "Heeft de klant een eigen GetYourGuide affiliate-account?",
+    a: "Huidige concept gebruikt een placeholder-link. Moet vervangen worden door zijn eigen account, of we zetten 'm gewoon zonder affiliate als simpele verwijzing."
+  },
+  {
+    tag: "open", tagLabel: "open",
+    q: "Welke Instagram-accounts bedoelde de klant precies?",
+    a: "In WhatsApp genoemd als 'wat leuke Instagram pagina specifiek voor deze regio' — geen namen gegeven. Navragen welke."
+  },
+  {
+    tag: "decided", tagLabel: "besloten",
+    q: "Hosting: GitHub Pages",
+    a: "Gratis, snel, levert werkende mobiele link op zonder gedoe. Geen HTML-bestand via WhatsApp."
+  },
+  {
+    tag: "decided", tagLabel: "besloten",
+    q: "Stack: statische HTML/CSS/JS, geen framework",
+    a: "Info-site zonder backend nodig. Geen Firebase/Auth/Firestore zoals bij Vetklep — dit is een ander type project."
+  },
+  {
+    tag: "decided", tagLabel: "besloten",
+    q: "Zest Car Rental link blijft exact zoals aangeleverd",
+    a: "Affiliate-tracking van de klant zelf, niet aanpassen. Wel laten testen door klant of hij zelf werkt."
+  },
+  {
+    tag: "backlog", tagLabel: "backlog",
+    q: "Koppeling reserveringssysteem",
+    a: "Door klant zelf al als 'stap verder' aangemerkt. Pure info-site nu, geen booking-functionaliteit."
+  },
+  {
+    tag: "backlog", tagLabel: "backlog",
+    q: "Korting-voor-boeker / cashback affiliatie-structuur",
+    a: "Verdienmodel-vraag, geen technische taak. Bespreken met klant zodra de site staat."
+  }
+];
+
+function statusBadge(status){
+  if(status === 'done') return '<span class="status-badge status-done">klaar</span>';
+  if(status === 'progress') return '<span class="status-badge status-progress">bezig</span>';
+  if(status === 'blocked') return '<span class="status-badge status-blocked">geblokkeerd</span>';
+  return '<span class="status-badge status-todo">nog te doen</span>';
+}
+
+function renderPhases(){
+  const list = document.getElementById('phase-list');
+  list.innerHTML = phases.map((p,i)=>`
+    <div class="phase" id="phase-${i}">
+      <div class="phase-hdr" onclick="togglePhase(${i})">
+        <div class="phase-num ${p.status === 'done' ? 'done' : ''} ${p.status === 'blocked' ? 'blocked' : ''}">${p.status === 'done' ? '<i class="ti ti-check" aria-hidden="true"></i>' : (i+1)}</div>
+        <div class="phase-title">${p.title}</div>
+        ${statusBadge(p.status)}
+        <div class="phase-meta">${p.meta}</div>
+      </div>
+      <div class="phase-body">
+        ${p.tasks.map(t=>`<div class="task ${t.done ? 'done' : ''}">${t.done ? '<i class="ti ti-check task-check" aria-hidden="true"></i>' : '<div class="task-dot"></div>'}<div>${t.text}</div></div>`).join('')}
+        ${p.note ? `<div class="note ${p.noteType === 'warn' ? 'warn' : (p.noteType === 'info' ? 'info' : '')}">${p.note}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('phase-0').classList.add('open');
+  document.getElementById('phase-1').classList.add('open');
+}
+
+function togglePhase(i){
+  document.getElementById('phase-'+i).classList.toggle('open');
+}
+
+function renderQA(){
+  const wrap = document.getElementById('qa-list');
+  wrap.innerHTML = qaItems.map(item => `
+    <div class="qa-item">
+      <div class="qa-q"><span class="qa-tag ${item.tag}">${item.tagLabel}</span>${item.q}</div>
+      <div class="qa-a">${item.a}</div>
+    </div>
+  `).join('');
+}
+
+const colors = ["#1B6E8C","#7F77DD","#1D9E75","#BA7517","#C8623B"];
+const projectStartDate = new Date(2026, 5, 25); // do 25 juni 2026
+const todayDate = new Date(2026, 5, 25);
+
+function isWeekday(d){ const day = d.getDay(); return day !== 0 && day !== 6; }
+
+function buildWeekdayList(start, count){
+  const days = [];
+  let cursor = new Date(start);
+  while(days.length < count){
+    if(isWeekday(cursor)) days.push(new Date(cursor));
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return days;
+}
+
+const ganttPhases = phases.filter(p => p.lengthDays > 0);
+const maxDay = Math.max(...ganttPhases.map(p => p.startDay + p.lengthDays));
+const weekdays = buildWeekdayList(projectStartDate, maxDay + 2);
+
+function fmtDay(d){
+  const names = ['zo','ma','di','wo','do','vr','za'];
+  return names[d.getDay()] + ' ' + d.getDate() + '/' + (d.getMonth()+1);
+}
+
+function dayIndexFor(date){
+  return weekdays.findIndex(d => d.toDateString() === date.toDateString());
+}
+
+function renderGantt(){
+  let html = '<table class="gantt"><tr><th class="daylabel" style="text-align:left;padding-left:10px;">Fase</th>';
+  weekdays.forEach(d=>{
+    html += `<th class="daylabel">${fmtDay(d)}</th>`;
+  });
+  html += '</tr>';
+
+  ganttPhases.forEach((p,i)=>{
+    html += `<tr><td class="label">${p.status === 'done' ? '<i class="ti ti-check" style="color:#1D9E75;margin-right:4px;" aria-hidden="true"></i>' : ''}${i+1}. ${p.title}</td>`;
+    for(let d=0; d<weekdays.length; d++){
+      if(d >= p.startDay && d < p.startDay + p.lengthDays){
+        const isStart = d === p.startDay;
+        const isEnd = d === p.startDay + p.lengthDays - 1;
+        let radius = '4px';
+        if(p.lengthDays > 1){
+          if(isStart) radius = '4px 0 0 4px';
+          else if(isEnd) radius = '0 4px 4px 0';
+          else radius = '0';
+        }
+        const barColor = p.status === 'done' ? '#1D9E75' : colors[i % colors.length];
+        html += `<td><div class="bar" style="background:${barColor};border-radius:${radius};${!isStart?'margin-left:0;':''}${!isEnd?'margin-right:0;':''}"></div></td>`;
+      } else {
+        html += '<td></td>';
+      }
+    }
+    html += '</tr>';
+  });
+  html += '</table>';
+  document.getElementById('gantt-table').innerHTML = html;
+
+  const todayIdx = dayIndexFor(todayDate);
+  if(todayIdx >= 0){
+    const wrap = document.getElementById('gantt-wrap');
+    document.querySelectorAll('.today-line, .today-label').forEach(el => el.remove());
+    const labelColWidth = 246;
+    const colWidth = 30;
+    const leftPx = labelColWidth + (todayIdx * colWidth) + (colWidth/2) + 16;
+    const line = document.createElement('div');
+    line.className = 'today-line';
+    line.style.left = leftPx + 'px';
+    const label = document.createElement('div');
+    label.className = 'today-label';
+    label.style.left = leftPx + 'px';
+    label.textContent = 'vandaag';
+    wrap.appendChild(line);
+    wrap.appendChild(label);
+  }
+}
+
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+});
+
+renderPhases();
+renderQA();
+renderGantt();
+</script>
+</body>
+</html>

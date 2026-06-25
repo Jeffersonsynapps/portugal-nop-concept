@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Preview A — Gastengids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --cream: #FDF8F0;
+  --peach-light: #FBE9DE;
+  --oker-light: #E8D9B8;
+  --terracotta: #B8735A;
+  --terracotta-light: #E8C4B5;
+  --salie-light: #D4DCCE;
+  --teal: #1B6E6D;
+  --teal-dark: #134E4E;
+  --teal-light: #C5E0DF;
+  --text: #2C2C2C;
+  --text-light: #5A5A5A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Karla', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ── Hero ── */
+.hero {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: url('assets/hero.png') center/cover no-repeat;
+  padding: 60px 24px;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(19,78,78,0.05) 0%,
+    rgba(19,78,78,0.1) 50%,
+    rgba(19,78,78,0.4) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+}
+
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 7vw, 56px);
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 16px rgba(19,78,78,0.4), 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.hero p {
+  font-size: clamp(15px, 2.5vw, 18px);
+  color: rgba(255,255,255,0.92);
+  font-weight: 400;
+  max-width: 440px;
+  margin: 0 auto;
+  text-shadow: 0 1px 8px rgba(19,78,78,0.35);
+}
+
+/* ── Content ── */
+.content {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 40px 24px 24px;
+}
+
+.category-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Categorie-box ── */
+.category-box {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.category-header h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--teal-dark);
+}
+
+/* ── Subgroepen ── */
+.sub-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.sub-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sub-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  margin-bottom: 2px;
+}
+
+.sub-header .sub-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* ── Items ── */
+.item {
+  padding: 10px 14px;
+  background: var(--cream);
+  border-radius: 8px;
+}
+
+.item h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--teal-dark);
+  margin-bottom: 3px;
+}
+
+.item p {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+.item .tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+
+.tag-peach      { background: var(--peach-light); color: var(--terracotta); }
+.tag-oker       { background: var(--oker-light);  color: #7A6030; }
+.tag-terracotta { background: var(--terracotta-light); color: #7A3F2D; }
+.tag-salie      { background: var(--salie-light); color: #3F5035; }
+.tag-teal       { background: var(--teal-light);  color: var(--teal-dark); }
+
+.item a {
+  color: var(--teal);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.item a:hover {
+  text-decoration: underline;
+}
+
+/* ── Backlog-sectie ── */
+.backlog {
+  margin-top: 20px;
+  max-width: 1040px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 24px 24px;
+}
+
+.backlog-box {
+  background: #fff;
+  border: 1px dashed rgba(0,0,0,0.12);
+  border-radius: 14px;
+  padding: 24px;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.backlog-box h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: #999;
+  margin-bottom: 12px;
+}
+
+.backlog-box ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.backlog-box li {
+  font-size: 13px;
+  color: #aaa;
+  padding-left: 16px;
+  position: relative;
+}
+
+.backlog-box li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 32px 24px;
+  font-size: 13px;
+  background: var(--teal-dark);
+  color: rgba(255,255,255,0.6);
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <h1>Welkom</h1>
+    <p>Jouw persoonlijke gids voor de mooiste tips, plekken en ervaringen rond het huisje.</p>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+  <div class="category-grid">
+
+    <!-- BOX 1: BOODSCHAPPEN & SHOPPEN -->
+    <div class="category-box">
+      <div class="category-header">
+        <div class="category-icon" style="background:var(--peach-light);color:var(--terracotta);">&#x1F6D2;</div>
+        <h2>Boodschappen &amp; shoppen</h2>
+      </div>
+
+      <div class="sub-groups">
+        <div class="sub-group">
+          <div class="sub-header"><span class="sub-icon">&#x1F6D2;</span> Supermarkten</div>
+          <div class="item">
+            <h3>Apolonia</h3>
+            <p>Tussen Lagoa en Carvoeiro. Mooiste supermarkt, wel duur.</p>
+            <span class="tag tag-peach">Supermarkt</span>
+          </div>
+          <div class="item">
+            <h3>Aldi</h3>
+            <p>Tussen Lagoa en Carvoeiro, vlakbij Apolonia.</p>
+            <span class="tag tag-peach">Supermarkt</span>
+          </div>
+          <div class="item">
+            <h3>Intermarché</h3>
+            <p>Vlak voor Carvoeiro.</p>
+            <span class="tag tag-peach">Supermarkt</span>
+          </div>
+          <div class="item">
+            <h3>Twee kleine winkeltjes</h3>
+            <p>In de hoofdstraat van Carvoeiro.</p>
+            <span class="tag tag-peach">Winkeltje</span>
+          </div>
+          <div class="item">
+            <h3>Mais Perto</h3>
+            <p>5 minuten lopen vanaf Monte Dourado.</p>
+            <span class="tag tag-peach">Winkeltje</span>
+          </div>
+        </div>
+
+        <div class="sub-group">
+          <div class="sub-header"><span class="sub-icon">&#x1F950;</span> Bakker</div>
+          <div class="item">
+            <h3>Padaria Fabrica Velha</h3>
+            <p>Aan de ingaande hoofdweg. Lekker brood, gebak, koffie, ontbijt.</p>
+            <span class="tag tag-oker">Bakker</span>
+          </div>
+        </div>
+
+        <div class="sub-group">
+          <div class="sub-header"><span class="sub-icon">&#x1F6CD;</span> Shoppen</div>
+          <div class="item">
+            <h3>MAR Shopping centre / Designer Outlet</h3>
+            <p>Loulé.</p>
+            <span class="tag tag-salie">Winkelcentrum</span>
+          </div>
+          <div class="item">
+            <h3>Forum Algarve</h3>
+            <p>Faro.</p>
+            <span class="tag tag-salie">Winkelcentrum</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOX 2: ETEN & DRINKEN -->
+    <div class="category-box">
+      <div class="category-header">
+        <div class="category-icon" style="background:var(--oker-light);color:#7A6030;">&#x1F37D;</div>
+        <h2>Eten &amp; drinken</h2>
+      </div>
+
+      <div class="sub-groups">
+        <div class="sub-group">
+          <div class="sub-header"><span class="sub-icon">&#x1F37D;</span> Restaurants</div>
+          <div class="item">
+            <h3>Levels Beach Bar</h3>
+            <p>Aan de boulevard voor het strand. Leukste plek voor overdag, borrel/lunch. Ook prima voor diner op de 1e etage.</p>
+            <span class="tag tag-oker">Boulevard</span>
+          </div>
+          <div class="item">
+            <h3>Tapas da Vila</h3>
+            <p>Linkerkant van de boulevard aan de weg.</p>
+            <span class="tag tag-oker">Boulevard</span>
+          </div>
+          <div class="item">
+            <h3>Avola</h3>
+            <p>Vanuit Monte Dourado direct naar beneden naar de hoofdzijweg.</p>
+            <span class="tag tag-oker">Dichtbij</span>
+          </div>
+          <div class="item">
+            <h3>Mar de Fora</h3>
+            <p>Fantastische zonsondergang. Heerlijke vis. Wel iets duurder.</p>
+            <span class="tag tag-oker">Vis</span>
+          </div>
+          <div class="item">
+            <h3>Black Salt &amp; Manoels</h3>
+            <p>Iets buiten het centrum.</p>
+            <span class="tag tag-oker">Buiten centrum</span>
+          </div>
+          <div class="item">
+            <h3>Etxea</h3>
+            <p>Wat chiquer.</p>
+            <span class="tag tag-oker">Chic</span>
+          </div>
+          <div class="item">
+            <h3>Encci</h3>
+            <p>Voor een lekkere pizza.</p>
+            <span class="tag tag-oker">Pizza</span>
+          </div>
+        </div>
+
+        <div class="sub-group">
+          <div class="sub-header"><span class="sub-icon">&#x1F378;</span> Borrel</div>
+          <div class="item">
+            <h3>Skybar 360</h3>
+            <p>Bovenin Hotel Carvoeiro.</p>
+            <span class="tag tag-terracotta">Borrel</span>
+          </div>
+          <div class="item">
+            <h3>MatabiXO bar</h3>
+            <p>Kop van de boulevard.</p>
+            <span class="tag tag-terracotta">Borrel</span>
+          </div>
+          <div class="item">
+            <h3>Levels &amp; Xamor</h3>
+            <p>Soms ook leuk voor een drankje.</p>
+            <span class="tag tag-terracotta">Borrel</span>
+          </div>
+          <div class="item">
+            <h3>Engelse pubs</h3>
+            <p>Een van de vele Engelse pubs in het dorp.</p>
+            <span class="tag tag-terracotta">Pub</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOX 3: TE DOEN IN CARVOEIRO -->
+    <div class="category-box">
+      <div class="category-header">
+        <div class="category-icon" style="background:var(--teal-light);color:var(--teal-dark);">&#x1F30D;</div>
+        <h2>Te doen in Carvoeiro</h2>
+      </div>
+
+      <div class="sub-groups">
+        <div class="sub-group">
+          <div class="sub-header"><span class="sub-icon">&#x1F6B6;</span> Lopend</div>
+          <div class="item">
+            <h3>Boardwalk naar Algar Seco Rocks</h3>
+            <p>Wandeling langs de kliffen.</p>
+            <span class="tag tag-teal">Lopend</span>
+          </div>
+          <div class="item">
+            <h3>Praia do Paraiso</h3>
+            <p>Onderaan restaurant Mar de Flora.</p>
+            <span class="tag tag-teal">Strand</span>
+          </div>
+        </div>
+
+        <div class="sub-group">
+          <div class="sub-header"><span class="sub-icon">&#x1F697;</span> Max 30 min met de auto</div>
+          <div class="item">
+            <h3>Ferragudo</h3>
+            <p>Met strand Playa Grande.</p>
+            <span class="tag tag-teal">&le; 30 min</span>
+          </div>
+          <div class="item">
+            <h3>Portimão</h3>
+            <span class="tag tag-teal">&le; 30 min</span>
+          </div>
+          <div class="item">
+            <h3>Benagil caves</h3>
+            <p>Kan ook met boot vanuit Carvoeiro.</p>
+            <span class="tag tag-teal">&le; 30 min</span>
+          </div>
+          <div class="item">
+            <h3>Slide &amp; Splash Waterpark</h3>
+            <span class="tag tag-teal">&le; 30 min</span>
+          </div>
+          <div class="item">
+            <h3>Silves</h3>
+            <span class="tag tag-teal">&le; 30 min</span>
+          </div>
+        </div>
+
+        <div class="sub-group">
+          <div class="sub-header"><span class="sub-icon">&#x1F30D;</span> Max 60 min met de auto</div>
+          <div class="item">
+            <h3>Monchique</h3>
+            <p>Met natuurwandeling!!</p>
+            <span class="tag tag-teal">&le; 60 min</span>
+          </div>
+          <div class="item">
+            <h3>Albufeira</h3>
+            <span class="tag tag-teal">&le; 60 min</span>
+          </div>
+          <div class="item">
+            <h3>Villamoura haven</h3>
+            <span class="tag tag-teal">&le; 60 min</span>
+          </div>
+          <div class="item">
+            <h3>Sagres</h3>
+            <p>Inclusief Farol do Cabo de São Vincente, meest zuidwestelijke punt van Europa.</p>
+            <span class="tag tag-teal">&le; 60 min</span>
+          </div>
+          <div class="item">
+            <h3>Faro en Ria Formosa</h3>
+            <span class="tag tag-teal">&le; 60 min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOX 4: VERVOER -->
+    <div class="category-box">
+      <div class="category-header">
+        <div class="category-icon" style="background:var(--peach-light);color:var(--terracotta);">&#x1F510;</div>
+        <h2>Vervoer</h2>
+      </div>
+      <div class="item">
+        <h3>Zest Car Rental</h3>
+        <p>Huurauto boeken via affiliate-link. Levert korting op voor de boeker.</p>
+        <p><a href="https://www.zestcarrental.com/?utm_source=Algarveportugalia.com&utm_medium=Affiliate&utm_content=User%20Link&fbclid=PAdGRzdgRZd7ZleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA81NjcwNjczNDMzNTI0MjcAadQenqHHYxauV-o8mxVOBYaqeYAiuYTxsrahmrqiDsvFvzqKm03XUFQZy8RIQ_aem_8sjd4wofIzMwQ7ifo6v6Ew" target="_blank" rel="noopener">Boek via Zest Car Rental</a></p>
+        <span class="tag tag-oker">Huurauto</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BACKLOG -->
+<div class="backlog">
+  <div class="backlog-box">
+    <h2>Binnenkort beschikbaar</h2>
+    <ul>
+      <li>GetYourGuide (excursies)</li>
+      <li>Lokale Instagram-pagina's</li>
+      <li>Koppeling reserveringssysteem</li>
+    </ul>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Met zorg samengesteld voor de gasten van het huisje
+</div>
+
+</body>
+</html>
