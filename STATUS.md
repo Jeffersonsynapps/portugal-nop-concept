@@ -1,6 +1,6 @@
 # Status — Gastengids Carvoeiro
 
-**Datum:** 25 juni 2026
+**Datum:** 26 juni 2026
 **Versie:** concept-fase — nog niet gepubliceerd, nog geen git-repo
 
 ## Wat klaar is
@@ -22,6 +22,11 @@
 - Inspiratie als eigen categorie-box afgesplitst
 - Grid herstructureerd: 9 losse categorie-boxen samengevoegd tot 4 overkoepelende boxen (Boodschappen & shoppen, Eten & drinken, Te doen in Carvoeiro, Vervoer) met subkopjes en scheidingslijnen per subgroep
 - Layout omgezet naar 1-kolom rubrieken (volle breedte) met auto-fit subgroepen naast elkaar binnen elke rubriek
+- Hero-afbeelding vervangen door video-playlist systeem: `assets/hero-videos/video-1.mp4`, autoplay muted playsinline, playbackRate 0.2×, object-fit cover; fade-out in laatste 0,5 seconde + fade-in bij volgende video via CSS opacity transition; playlist-array in JS maakt later toevoegen van video-2.mp4 e.v. triviaal
+- Hero-overlay en witte overlay-tekst verwijderd; welkomsttekst nu direct onder de video in teal-dark kleur
+- Wisselende tekst-overlay toegevoegd op de video (Welcome / Enjoy / Relax / Take your time); elke 4,5 seconden fade-out → nieuw woord → fade-in op willekeurige positie; positie berekend op basis van actuele elementbreedte vs herohoogte/breedte zodat tekst nooit buiten beeld valt op enige schermgrootte
+- Hero-mediacyclus uitgebreid met foto-fase: Fase 1 (video-playlist eenmaal door) → Fase 2 (5 foto's × 10 sec + 1,8s fade, uit assets/hero-photos/foto-1..5) → terug naar Fase 1; tekst-overlay loopt volledig onafhankelijk door beide fases heen
+- Modal/bottom-sheet patroon gebouwd als herbruikbaar systeem (modalData object + openModal/closeModal functies); proef: Padaria Fabrica Velha (bakker-kaart) — desktop gecentreerd met overlay, mobiel bottom-sheet; inhoud: foto-placeholders, titel, beschrijving, Google Maps embed + "Open in Google Maps" link; uitbreiden naar andere kaarten = 1 object toevoegen aan modalData + click-handler
 
 ## Open punten
 

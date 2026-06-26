@@ -34,51 +34,57 @@ body {
 /* ── Hero ── */
 .hero {
   position: relative;
-  min-height: 70vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: url('assets/hero.png') center/cover no-repeat;
-  padding: 60px 24px;
+  height: 70vh;
+  overflow: hidden;
+  background: var(--teal-dark);
 }
 
-.hero::after {
-  content: '';
+#hero-video {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(19,78,78,0.05) 0%,
-    rgba(19,78,78,0.1) 50%,
-    rgba(19,78,78,0.4) 100%
-  );
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity 0.5s ease;
 }
 
-.hero-content {
-  position: relative;
-  z-index: 1;
-  max-width: 600px;
+#hero-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.8s ease;
 }
 
-.hero h1 {
+#hero-overlay {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 2;
   font-family: 'Fraunces', serif;
   font-weight: 300;
-  font-size: clamp(36px, 7vw, 56px);
-  color: #fff;
-  line-height: 1.15;
-  margin-bottom: 12px;
-  letter-spacing: -0.02em;
-  text-shadow: 0 2px 16px rgba(19,78,78,0.4), 0 1px 4px rgba(0,0,0,0.2);
+  font-size: clamp(33px, 5.25vw, 63px);
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 20px rgba(19,78,78,0.55), 0 1px 8px rgba(0,0,0,0.25);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+  user-select: none;
 }
 
-.hero p {
-  font-size: clamp(15px, 2.5vw, 18px);
-  color: rgba(255,255,255,0.92);
-  font-weight: 400;
-  max-width: 440px;
-  margin: 0 auto;
-  text-shadow: 0 1px 8px rgba(19,78,78,0.35);
+/* ── Hero caption ── */
+.hero-caption {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(17px, 2.5vw, 22px);
+  color: var(--teal-dark);
+  line-height: 1.5;
+  text-align: center;
+  max-width: 580px;
+  margin: 0 auto 32px;
 }
 
 /* ── Content ── */
@@ -261,20 +267,156 @@ body {
   background: var(--teal-dark);
   color: rgba(255,255,255,0.6);
 }
+
+/* ── Klikbare item-kaartjes ── */
+body.modal-active { overflow: hidden; }
+
+.item-clickable { cursor: pointer; transition: background 0.15s ease; }
+.item-clickable:hover { background: var(--oker-light); }
+
+.item-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--teal);
+  margin-top: 8px;
+}
+
+/* ── Modal ── */
+#modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.22s ease, visibility 0s linear 0.22s;
+}
+#modal-overlay.is-open {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.22s ease, visibility 0s linear 0s;
+}
+#modal-box {
+  background: var(--cream);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.96);
+  transition: transform 0.22s ease;
+}
+#modal-overlay.is-open #modal-box { transform: scale(1); }
+
+.modal-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 12px 0;
+  flex-shrink: 0;
+}
+#modal-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.08);
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#modal-close:hover { background: rgba(0,0,0,0.14); }
+
+.modal-scroll { overflow-y: auto; flex: 1; }
+
+.modal-photos {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px 0;
+}
+.modal-photo-placeholder {
+  flex: 1;
+  height: 130px;
+  background: var(--oker-light);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #9A7840;
+  font-size: 12px;
+}
+.modal-photo-placeholder .ph-icon { font-size: 26px; }
+
+.modal-body { padding: 20px; }
+.modal-body h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--teal-dark);
+  margin-bottom: 8px;
+}
+.modal-body p {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.modal-map {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.modal-map iframe { display: block; width: 100%; height: 200px; border: none; }
+
+.modal-maps-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--teal);
+  text-decoration: none;
+}
+.modal-maps-link:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  #modal-overlay { align-items: flex-end; padding: 0; }
+  #modal-box {
+    max-width: 100%;
+    max-height: 88vh;
+    border-radius: 16px 16px 0 0;
+    transform: translateY(20px);
+  }
+  #modal-overlay.is-open #modal-box { transform: translateY(0); }
+}
 </style>
 </head>
 <body>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-content">
-    <h1>Welkom</h1>
-    <p>Jouw persoonlijke gids voor de mooiste tips, plekken en ervaringen rond het huisje.</p>
-  </div>
+  <video id="hero-video" autoplay muted playsinline></video>
+  <img id="hero-photo" src="" alt="" aria-hidden="true">
+  <div id="hero-overlay"></div>
 </div>
 
 <!-- CONTENT -->
 <div class="content">
+  <p class="hero-caption">Welkom, jouw persoonlijke gids voor de mooiste tips rond het huisje</p>
   <div class="category-grid">
 
     <!-- BOX 1: BOODSCHAPPEN & SHOPPEN -->
@@ -316,10 +458,11 @@ body {
 
         <div class="sub-group">
           <div class="sub-header"><span class="sub-icon">&#x1F950;</span> Bakker</div>
-          <div class="item">
+          <div class="item item-clickable" id="item-bakker" role="button" tabindex="0">
             <h3>Padaria Fabrica Velha</h3>
             <p>Aan de ingaande hoofdweg. Lekker brood, gebak, koffie, ontbijt.</p>
             <span class="tag tag-oker">Bakker</span>
+            <span class="item-more">Meer info ›</span>
           </div>
         </div>
 
@@ -522,5 +665,210 @@ body {
   Met zorg samengesteld voor de gasten van het huisje
 </div>
 
+<!-- MODAL -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-el">
+  <div id="modal-box">
+    <div class="modal-header">
+      <button id="modal-close" aria-label="Sluiten">&#x2715;</button>
+    </div>
+    <div class="modal-scroll">
+      <div class="modal-photos"></div>
+      <div class="modal-body">
+        <h2 class="modal-title" id="modal-title-el"></h2>
+        <p class="modal-description"></p>
+        <div class="modal-map"></div>
+        <a class="modal-maps-link" href="#" target="_blank" rel="noopener">
+          &#x1F4CD;&nbsp;Open in Google Maps
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Media-cyclus: video-playlist → foto-playlist → video-playlist → … ── */
+const heroVideos = [
+  'assets/hero-videos/video-1.mp4'
+];
+const heroPhotos = [
+  'assets/hero-photos/foto-1.jpg',
+  'assets/hero-photos/foto-2.jpg',
+  'assets/hero-photos/foto-3.jpg',
+  'assets/hero-photos/foto-4.jpg',
+  'assets/hero-photos/foto-5.png'
+];
+
+const PHOTO_DISPLAY = 10000;
+const PHOTO_FADE    = 1800;
+
+let videoIndex = 0;
+let photoIndex = 0;
+let phase      = 1;
+
+const videoEl = document.getElementById('hero-video');
+const photoEl = document.getElementById('hero-photo');
+
+function applyPlaybackRate() {
+  videoEl.playbackRate = 0.4;
+}
+
+videoEl.addEventListener('canplay', applyPlaybackRate);
+
+videoEl.addEventListener('timeupdate', function() {
+  if (phase !== 1) return;
+  if (videoEl.duration && videoEl.currentTime >= videoEl.duration - 0.1) {
+    videoEl.style.opacity = '0';
+  }
+});
+
+videoEl.addEventListener('ended', function() {
+  if (phase !== 1) return;
+  videoIndex++;
+  if (videoIndex < heroVideos.length) {
+    videoEl.src = heroVideos[videoIndex];
+    videoEl.load();
+    videoEl.play().then(function() {
+      applyPlaybackRate();
+      videoEl.style.opacity = '1';
+    }).catch(function() {});
+  } else {
+    phase = 2;
+    photoIndex = 0;
+    showPhoto(0);
+  }
+});
+
+function showPhoto(index) {
+  photoEl.src = heroPhotos[index];
+  photoEl.getBoundingClientRect();
+  photoEl.style.opacity = '1';
+
+  setTimeout(function() {
+    photoEl.style.opacity = '0';
+    setTimeout(function() {
+      photoIndex++;
+      if (photoIndex < heroPhotos.length) {
+        showPhoto(photoIndex);
+      } else {
+        photoIndex = 0;
+        videoIndex = 0;
+        phase = 1;
+        videoEl.src = heroVideos[0];
+        videoEl.load();
+        videoEl.play().then(function() {
+          applyPlaybackRate();
+          videoEl.style.opacity = '1';
+        }).catch(function() {});
+      }
+    }, PHOTO_FADE);
+  }, PHOTO_DISPLAY);
+}
+
+videoEl.src = heroVideos[0];
+videoEl.load();
+videoEl.play().then(function() {
+  applyPlaybackRate();
+}).catch(function() {});
+
+/* ── Modal systeem ── */
+var modalData = {
+  bakker: {
+    title: 'Padaria Fabrica Velha',
+    description: 'Aan de ingaande hoofdweg. Lekker brood, gebak, koffie, ontbijt.',
+    photos: [
+      { placeholder: true, icon: '🥐', label: 'Foto volgt' },
+      { placeholder: true, icon: '☕', label: 'Foto volgt' }
+    ],
+    mapsEmbed: 'https://maps.google.com/maps?q=Padaria+Fabrica+Velha,+R.+dos+Pescadores+7,+Carvoeiro&output=embed',
+    mapsLink: 'https://www.google.com/maps/search/?api=1&query=Padaria+Fabrica+Velha+R.+dos+Pescadores+7+Carvoeiro'
+  }
+};
+
+var modalOverlay = document.getElementById('modal-overlay');
+var modalBox     = document.getElementById('modal-box');
+
+function openModal(key) {
+  var data = modalData[key];
+  if (!data) return;
+
+  modalBox.querySelector('.modal-photos').innerHTML = data.photos.map(function(p) {
+    if (p.placeholder) {
+      return '<div class="modal-photo-placeholder"><span class="ph-icon">' + p.icon + '</span><span>' + p.label + '</span></div>';
+    }
+    return '<img src="' + p.src + '" alt="" style="flex:1;height:130px;object-fit:cover;border-radius:10px;">';
+  }).join('');
+
+  modalBox.querySelector('.modal-title').textContent       = data.title;
+  modalBox.querySelector('.modal-description').textContent = data.description;
+  modalBox.querySelector('.modal-map').innerHTML =
+    '<iframe src="' + data.mapsEmbed + '" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
+  modalBox.querySelector('.modal-maps-link').href = data.mapsLink;
+
+  document.body.classList.add('modal-active');
+  modalOverlay.classList.add('is-open');
+}
+
+function closeModal() {
+  modalOverlay.classList.remove('is-open');
+  document.body.classList.remove('modal-active');
+  setTimeout(function() {
+    modalBox.querySelector('.modal-map').innerHTML = '';
+  }, 250);
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', function(e) {
+  if (e.target === modalOverlay) closeModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+var bakkerEl = document.getElementById('item-bakker');
+bakkerEl.addEventListener('click', function() { openModal('bakker'); });
+bakkerEl.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal('bakker'); }
+});
+
+/* ── Word overlay ── */
+const overlayWords = ['Welcome', 'Enjoy', 'Relax', 'Take your time'];
+let overlayIndex = 0;
+const overlayEl = document.getElementById('hero-overlay');
+const heroEl    = document.querySelector('.hero');
+
+function placeOverlayRandom() {
+  var heroW = heroEl.offsetWidth;
+  var heroH = heroEl.offsetHeight;
+  var elW   = overlayEl.offsetWidth;
+  var elH   = overlayEl.offsetHeight;
+  var margin = 20;
+
+  var minL = (elW / 2 + margin) / heroW * 100;
+  var maxL = 100 - minL;
+  var minT = (elH / 2 + margin) / heroH * 100;
+  var maxT = 100 - minT;
+
+  overlayEl.style.left = (minL + Math.random() * (maxL - minL)).toFixed(1) + '%';
+  overlayEl.style.top  = (minT + Math.random() * (maxT - minT)).toFixed(1) + '%';
+}
+
+function showNextOverlayWord() {
+  overlayEl.style.opacity = '0';
+  setTimeout(function() {
+    overlayIndex = (overlayIndex + 1) % overlayWords.length;
+    overlayEl.textContent = overlayWords[overlayIndex];
+    overlayEl.getBoundingClientRect(); // force reflow voor juiste breedte
+    placeOverlayRandom();
+    overlayEl.style.opacity = '1';
+  }, 1200);
+}
+
+overlayEl.textContent = overlayWords[0];
+setTimeout(function() {
+  placeOverlayRandom();
+  overlayEl.style.opacity = '1';
+  setInterval(showNextOverlayWord, 4500);
+}, 400);
+</script>
 </body>
 </html>
