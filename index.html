@@ -160,6 +160,31 @@ body {
   color: var(--teal-dark);
 }
 
+/* ── Accordion (rubriek-boxen inklapbaar) ── */
+.category-header[data-accordion-toggle] { cursor: pointer; user-select: none; }
+.category-chevron {
+  margin-left: auto;
+  font-size: 20px;
+  color: var(--teal);
+  line-height: 1;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+.category-box.open .category-chevron { transform: rotate(90deg); }
+
+.category-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+.category-box.open .category-collapse {
+  grid-template-rows: 1fr;
+}
+.category-collapse-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
 /* ── Subgroepen ── */
 .sub-groups {
   display: grid;
@@ -461,11 +486,14 @@ body.modal-active { overflow: hidden; }
 
     <!-- BOX 1: BOODSCHAPPEN & SHOPPEN -->
     <div class="category-box">
-      <div class="category-header">
+      <div class="category-header" data-accordion-toggle>
         <div class="category-icon" style="background:var(--peach-light);color:var(--terracotta);">&#x1F6D2;</div>
         <h2>Boodschappen &amp; shoppen</h2>
+        <div class="category-chevron" aria-hidden="true">›</div>
       </div>
 
+      <div class="category-collapse">
+      <div class="category-collapse-inner">
       <div class="sub-groups">
         <div class="sub-group">
           <div class="sub-header"><span class="sub-icon">&#x1F6D2;</span> Supermarkten</div>
@@ -527,15 +555,20 @@ body.modal-active { overflow: hidden; }
           </div>
         </div>
       </div>
+      </div>
+      </div>
     </div>
 
     <!-- BOX 2: ETEN & DRINKEN -->
     <div class="category-box">
-      <div class="category-header">
+      <div class="category-header" data-accordion-toggle>
         <div class="category-icon" style="background:var(--oker-light);color:#7A6030;">&#x1F37D;</div>
         <h2>Eten &amp; drinken</h2>
+        <div class="category-chevron" aria-hidden="true">›</div>
       </div>
 
+      <div class="category-collapse">
+      <div class="category-collapse-inner">
       <div class="sub-groups">
         <div class="sub-group">
           <div class="sub-header"><span class="sub-icon">&#x1F37D;</span> Restaurants</div>
@@ -600,15 +633,20 @@ body.modal-active { overflow: hidden; }
           </div>
         </div>
       </div>
+      </div>
+      </div>
     </div>
 
     <!-- BOX 3: TE DOEN IN CARVOEIRO -->
     <div class="category-box">
-      <div class="category-header">
+      <div class="category-header" data-accordion-toggle>
         <div class="category-icon" style="background:var(--teal-light);color:var(--teal-dark);">&#x1F30D;</div>
         <h2>Te doen in Carvoeiro</h2>
+        <div class="category-chevron" aria-hidden="true">›</div>
       </div>
 
+      <div class="category-collapse">
+      <div class="category-collapse-inner">
       <div class="sub-groups">
         <div class="sub-group">
           <div class="sub-header"><span class="sub-icon">&#x1F6B6;</span> Lopend</div>
@@ -675,6 +713,8 @@ body.modal-active { overflow: hidden; }
             <span class="tag tag-teal">&le; 60 min</span>
           </div>
         </div>
+      </div>
+      </div>
       </div>
     </div>
 
@@ -965,6 +1005,18 @@ document.querySelectorAll('.item-clickable').forEach(function(el) {
   el.addEventListener('click', function() { openModal(key); });
   el.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(key); }
+  });
+});
+
+/* ── Accordion: rubriek-boxen staan standaard dicht (geen .open-klasse bij laden) ── */
+document.querySelectorAll('.category-header[data-accordion-toggle]').forEach(function(header) {
+  header.setAttribute('role', 'button');
+  header.setAttribute('tabindex', '0');
+  var box = header.closest('.category-box');
+  function toggleBox() { box.classList.toggle('open'); }
+  header.addEventListener('click', toggleBox);
+  header.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleBox(); }
   });
 });
 
