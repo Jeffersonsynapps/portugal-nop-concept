@@ -59,6 +59,25 @@ body {
   transition: opacity 1.8s ease;
 }
 
+/* ── Mobiel: volledige breedte zichtbaar, containerhoogte volgt de beeldverhouding
+   (JS zet een expliciete px-hoogte; aspect-ratio hier is enkel een fallback tot die
+   berekening klaar is, zodat de hero niet even op 0 hoogte inklapt). ── */
+@media (max-width: 600px) {
+  .hero {
+    width: 100%; /* expliciet vastzetten: anders herberekent aspect-ratio de breedte
+                    zodra JS een vaste hoogte instelt, i.p.v. gewoon de volle breedte
+                    van de container aan te houden */
+    height: auto;
+    aspect-ratio: 16 / 9;
+    transition: height 0.3s ease;
+  }
+  #hero-video, #hero-photo {
+    object-fit: contain;
+    object-position: top;
+    background: var(--cream);
+  }
+}
+
 #hero-overlay {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -75,16 +94,22 @@ body {
   user-select: none;
 }
 
+@media (max-width: 600px) {
+  #hero-overlay {
+    font-size: calc(clamp(33px, 5.25vw, 63px) * 0.6); /* ~60% van de desktop-grootte */
+  }
+}
+
 /* ── Hero caption ── */
 .hero-caption {
   font-family: 'Fraunces', serif;
-  font-weight: 300;
-  font-size: clamp(17px, 2.5vw, 22px);
+  font-weight: 500;
+  font-size: clamp(21px, 3.4vw, 30px);
   color: var(--teal-dark);
-  line-height: 1.5;
+  line-height: 1.4;
   text-align: center;
-  max-width: 580px;
-  margin: 0 auto 32px;
+  max-width: 620px;
+  margin: 0 auto 36px;
 }
 
 /* ── Content ── */
@@ -130,8 +155,8 @@ body {
 
 .category-header h2 {
   font-family: 'Fraunces', serif;
-  font-weight: 400;
-  font-size: 20px;
+  font-weight: 300;
+  font-size: 17px;
   color: var(--teal-dark);
 }
 
@@ -304,6 +329,7 @@ body.modal-active { overflow: hidden; }
   transition: opacity 0.22s ease, visibility 0s linear 0s;
 }
 #modal-box {
+  position: relative;
   background: var(--cream);
   border-radius: 16px;
   width: 100%;
@@ -318,17 +344,19 @@ body.modal-active { overflow: hidden; }
 #modal-overlay.is-open #modal-box { transform: scale(1); }
 
 .modal-header {
-  display: flex;
-  justify-content: flex-end;
-  padding: 12px 12px 0;
-  flex-shrink: 0;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 5;
 }
 #modal-close {
   width: 32px;
   height: 32px;
   border: none;
   border-radius: 50%;
-  background: rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(3px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
   color: var(--text);
   font-size: 16px;
   cursor: pointer;
@@ -336,14 +364,14 @@ body.modal-active { overflow: hidden; }
   align-items: center;
   justify-content: center;
 }
-#modal-close:hover { background: rgba(0,0,0,0.14); }
+#modal-close:hover { background: rgba(255,255,255,0.95); }
 
 .modal-scroll { overflow-y: auto; flex: 1; }
 
 .modal-photos {
   display: flex;
   gap: 8px;
-  padding: 12px 20px 0;
+  margin-bottom: 16px;
 }
 .modal-photo-placeholder {
   flex: 1;
@@ -367,6 +395,7 @@ body.modal-active { overflow: hidden; }
   font-size: 22px;
   color: var(--teal-dark);
   margin-bottom: 8px;
+  padding-right: 40px;
 }
 .modal-body p {
   font-size: 14px;
@@ -374,6 +403,17 @@ body.modal-active { overflow: hidden; }
   line-height: 1.6;
   margin-bottom: 20px;
 }
+.modal-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-light);
+  opacity: 0.85;
+  line-height: 1.5;
+  margin: -8px 0 12px;
+}
+.modal-address .addr-icon { flex-shrink: 0; line-height: 1.4; }
 .modal-map {
   border-radius: 10px;
   overflow: hidden;
@@ -382,7 +422,7 @@ body.modal-active { overflow: hidden; }
 }
 .modal-map iframe { display: block; width: 100%; height: 200px; border: none; }
 
-.modal-maps-link {
+.modal-link {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -391,7 +431,7 @@ body.modal-active { overflow: hidden; }
   color: var(--teal);
   text-decoration: none;
 }
-.modal-maps-link:hover { text-decoration: underline; }
+.modal-link:hover { text-decoration: underline; }
 
 @media (max-width: 640px) {
   #modal-overlay { align-items: flex-end; padding: 0; }
@@ -429,36 +469,41 @@ body.modal-active { overflow: hidden; }
       <div class="sub-groups">
         <div class="sub-group">
           <div class="sub-header"><span class="sub-icon">&#x1F6D2;</span> Supermarkten</div>
-          <div class="item">
+          <div class="item item-clickable" data-modal-key="apolonia" role="button" tabindex="0">
             <h3>Apolonia</h3>
             <p>Tussen Lagoa en Carvoeiro. Mooiste supermarkt, wel duur.</p>
             <span class="tag tag-peach">Supermarkt</span>
+            <span class="item-more">Meer info ›</span>
           </div>
-          <div class="item">
+          <div class="item item-clickable" data-modal-key="aldi" role="button" tabindex="0">
             <h3>Aldi</h3>
             <p>Tussen Lagoa en Carvoeiro, vlakbij Apolonia.</p>
             <span class="tag tag-peach">Supermarkt</span>
+            <span class="item-more">Meer info ›</span>
           </div>
-          <div class="item">
+          <div class="item item-clickable" data-modal-key="intermarche" role="button" tabindex="0">
             <h3>Intermarché</h3>
             <p>Vlak voor Carvoeiro.</p>
             <span class="tag tag-peach">Supermarkt</span>
+            <span class="item-more">Meer info ›</span>
           </div>
-          <div class="item">
+          <div class="item item-clickable" data-modal-key="winkeltjes" role="button" tabindex="0">
             <h3>Twee kleine winkeltjes</h3>
             <p>In de hoofdstraat van Carvoeiro.</p>
             <span class="tag tag-peach">Winkeltje</span>
+            <span class="item-more">Meer info ›</span>
           </div>
-          <div class="item">
+          <div class="item item-clickable" data-modal-key="maisperto" role="button" tabindex="0">
             <h3>Mais Perto</h3>
             <p>5 minuten lopen vanaf Monte Dourado.</p>
             <span class="tag tag-peach">Winkeltje</span>
+            <span class="item-more">Meer info ›</span>
           </div>
         </div>
 
         <div class="sub-group">
           <div class="sub-header"><span class="sub-icon">&#x1F950;</span> Bakker</div>
-          <div class="item item-clickable" id="item-bakker" role="button" tabindex="0">
+          <div class="item item-clickable" data-modal-key="bakker" role="button" tabindex="0">
             <h3>Padaria Fabrica Velha</h3>
             <p>Aan de ingaande hoofdweg. Lekker brood, gebak, koffie, ontbijt.</p>
             <span class="tag tag-oker">Bakker</span>
@@ -468,15 +513,17 @@ body.modal-active { overflow: hidden; }
 
         <div class="sub-group">
           <div class="sub-header"><span class="sub-icon">&#x1F6CD;</span> Shoppen</div>
-          <div class="item">
+          <div class="item item-clickable" data-modal-key="marshopping" role="button" tabindex="0">
             <h3>MAR Shopping centre / Designer Outlet</h3>
             <p>Loulé.</p>
             <span class="tag tag-salie">Winkelcentrum</span>
+            <span class="item-more">Meer info ›</span>
           </div>
-          <div class="item">
+          <div class="item item-clickable" data-modal-key="forumalgarve" role="button" tabindex="0">
             <h3>Forum Algarve</h3>
             <p>Faro.</p>
             <span class="tag tag-salie">Winkelcentrum</span>
+            <span class="item-more">Meer info ›</span>
           </div>
         </div>
       </div>
@@ -672,14 +719,13 @@ body.modal-active { overflow: hidden; }
       <button id="modal-close" aria-label="Sluiten">&#x2715;</button>
     </div>
     <div class="modal-scroll">
-      <div class="modal-photos"></div>
       <div class="modal-body">
         <h2 class="modal-title" id="modal-title-el"></h2>
         <p class="modal-description"></p>
+        <div class="modal-photos"></div>
+        <div class="modal-address"></div>
         <div class="modal-map"></div>
-        <a class="modal-maps-link" href="#" target="_blank" rel="noopener">
-          &#x1F4CD;&nbsp;Open in Google Maps
-        </a>
+        <div class="modal-link-wrap"></div>
       </div>
     </div>
   </div>
@@ -707,10 +753,42 @@ let phase      = 1; // 1 = video, 2 = foto
 
 const videoEl = document.getElementById('hero-video');
 const photoEl = document.getElementById('hero-photo');
+const heroEl  = document.querySelector('.hero');
 
 function applyPlaybackRate() {
   videoEl.playbackRate = 0.4;
 }
+
+/* ── Mobiel: hero-hoogte volgt de beeldverhouding van de actieve video/foto (volledige
+   breedte, hoogte "auto") in plaats van een vaste 70vh — dat voorkomt lege crème-ruimte
+   boven/onder het beeld. Op desktop blijft de vaste hoogte uit de CSS (cover, geen
+   aanpassing). CSS transition op .hero { height } zorgt dat een licht andere
+   beeldverhouding tussen video en foto's niet schokkerig oogt. ── */
+var currentMediaNatural = { w: 0, h: 0 };
+
+function isLetterboxMode() {
+  return window.matchMedia('(max-width: 600px)').matches;
+}
+
+function updateHeroHeight(naturalW, naturalH) {
+  if (naturalW && naturalH) {
+    currentMediaNatural.w = naturalW;
+    currentMediaNatural.h = naturalH;
+  }
+  if (!isLetterboxMode()) {
+    heroEl.style.height = '';
+    return;
+  }
+  if (!currentMediaNatural.w || !currentMediaNatural.h) return;
+  var heroW = heroEl.offsetWidth;
+  heroEl.style.height = (heroW * (currentMediaNatural.h / currentMediaNatural.w)) + 'px';
+}
+
+window.addEventListener('resize', function() { updateHeroHeight(); });
+
+videoEl.addEventListener('loadedmetadata', function() {
+  updateHeroHeight(videoEl.videoWidth, videoEl.videoHeight);
+});
 
 videoEl.addEventListener('canplay', applyPlaybackRate);
 
@@ -744,6 +822,10 @@ function showPhoto(index) {
   photoEl.src = heroPhotos[index];
   photoEl.getBoundingClientRect(); // force reflow zodat transition correct triggert
   photoEl.style.opacity = '1';
+  photoEl.addEventListener('load', function onPhotoLoad() {
+    photoEl.removeEventListener('load', onPhotoLoad);
+    updateHeroHeight(photoEl.naturalWidth, photoEl.naturalHeight);
+  });
 
   setTimeout(function() {
     // Fade out huidige foto
@@ -776,18 +858,43 @@ videoEl.play().then(function() {
 }).catch(function() {});
 
 /* ── Modal systeem ── */
-var modalData = {
-  bakker: {
-    title: 'Padaria Fabrica Velha',
-    description: 'Aan de ingaande hoofdweg. Lekker brood, gebak, koffie, ontbijt.',
-    photos: [
-      { placeholder: true, icon: '🥐', label: 'Foto volgt' },
-      { placeholder: true, icon: '☕', label: 'Foto volgt' }
-    ],
-    mapsEmbed: 'https://maps.google.com/maps?q=Padaria+Fabrica+Velha,+R.+dos+Pescadores+7,+Carvoeiro&output=embed',
-    mapsLink: 'https://www.google.com/maps/search/?api=1&query=Padaria+Fabrica+Velha+R.+dos+Pescadores+7+Carvoeiro'
-  }
-};
+function mapsEmbedFor(query) {
+  return 'https://maps.google.com/maps?q=' + encodeURIComponent(query) + '&output=embed';
+}
+
+// Bron voor alle klikbare items onder "Boodschappen & shoppen".
+// photos: leeg tot er echte foto's van de klant zijn; website: alleen tonen als beschikbaar.
+var shopItems = [
+  { key: 'apolonia', name: 'Apolonia', address: 'EN 124-1, Urbanização do Gramital Lote 2, 8400-428 Lagoa', website: 'apolonia.com', description: 'Tussen Lagoa en Carvoeiro. Mooiste supermarkt, wel duur.' },
+  { key: 'aldi', name: 'Aldi', address: 'R. dos Pescadores, Sítio das Lagoinhas, EN 124-1 Gramital, 8400-395 Lagoa', website: 'aldi.pt', description: 'Tussen Lagoa en Carvoeiro, vlakbij Apolonia.' },
+  { key: 'intermarche', name: 'Intermarché', address: 'Estrada de Carvoeiro, Poço Partido, 8400-557 Lagoa', website: 'intermarche.pt/lojas/faro/02357-lagoa-carvoeiro', description: 'Vlak voor Carvoeiro.' },
+  { key: 'winkeltjes', name: 'Twee kleine winkeltjes', address: 'Rua dos Pescadores, Carvoeiro', mapsAddress: 'Rua dos Pescadores 35, Carvoeiro', website: '', description: 'In de hoofdstraat van Carvoeiro.' },
+  { key: 'maisperto', name: 'Mais Perto', address: 'Bij Monte Dourado, Carvoeiro', mapsAddress: 'Monte Dourado, Carvoeiro', website: '', description: '5 minuten lopen vanaf Monte Dourado.' },
+  { key: 'bakker', name: 'Padaria Fabrica Velha', address: 'R. dos Pescadores 7, 8400-512 Carvoeiro', website: '', photos: ['assets/locatie-fotos/padaria/bakker1.jpg', 'assets/locatie-fotos/padaria/bakker2.jpg'], description: 'Aan de ingaande hoofdweg. Lekker brood, gebak, koffie, ontbijt.' },
+  { key: 'marshopping', name: 'MAR Shopping centre / Designer Outlet', address: 'Loulé', mapsQuery: 'Avenida do Algarve, 8135-182 Almancil', website: 'marshopping.com/algarve', description: 'Loulé.' },
+  { key: 'forumalgarve', name: 'Forum Algarve', address: 'Faro', website: 'forumalgarve.net', description: 'Faro.' }
+];
+
+var modalData = {};
+shopItems.forEach(function(item) {
+  // mapsAddress is een optioneel technisch ankerpunt: een straatnaam zonder huisnummer
+  // of een vage plaatsnaam levert geen duidelijke pin op in de Google Maps embed, dus
+  // dan gebruiken we een bevestigd adres puur om de kaart te centreren (naam + adres
+  // samen). mapsQuery is de sterkere variant daarvan: soms herkent Google de itemnaam
+  // zelf al als bestaande zaak (eigen categorie-icoontje i.p.v. pin) — in dat geval
+  // gebruiken we alléén het adres, zonder naam, zodat er wél een losse rode pin
+  // verschijnt mét de "Openen in Maps"-knop. De zichtbare tekst (item.address) blijft
+  // in alle gevallen ongewijzigd.
+  var mapsQuery = item.mapsQuery || (item.name + ', ' + (item.mapsAddress || item.address));
+  modalData[item.key] = {
+    title: item.name,
+    description: item.description,
+    photos: (item.photos || []).map(function(src) { return { src: src }; }),
+    website: item.website,
+    address: item.address,
+    mapsEmbed: mapsEmbedFor(mapsQuery)
+  };
+});
 
 var modalOverlay = document.getElementById('modal-overlay');
 var modalBox     = document.getElementById('modal-box');
@@ -796,18 +903,42 @@ function openModal(key) {
   var data = modalData[key];
   if (!data) return;
 
-  modalBox.querySelector('.modal-photos').innerHTML = data.photos.map(function(p) {
-    if (p.placeholder) {
-      return '<div class="modal-photo-placeholder"><span class="ph-icon">' + p.icon + '</span><span>' + p.label + '</span></div>';
-    }
-    return '<img src="' + p.src + '" alt="" style="flex:1;height:130px;object-fit:cover;border-radius:10px;">';
-  }).join('');
+  var photosEl = modalBox.querySelector('.modal-photos');
+  if (data.photos && data.photos.length) {
+    photosEl.style.display = '';
+    photosEl.innerHTML = data.photos.map(function(p) {
+      if (p.placeholder) {
+        return '<div class="modal-photo-placeholder"><span class="ph-icon">' + p.icon + '</span><span>' + p.label + '</span></div>';
+      }
+      return '<img src="' + p.src + '" alt="" style="flex:1;height:130px;object-fit:cover;border-radius:10px;">';
+    }).join('');
+  } else {
+    photosEl.style.display = 'none';
+    photosEl.innerHTML = '';
+  }
 
   modalBox.querySelector('.modal-title').textContent       = data.title;
   modalBox.querySelector('.modal-description').textContent = data.description;
+
+  var addressEl = modalBox.querySelector('.modal-address');
+  if (data.address) {
+    addressEl.style.display = '';
+    addressEl.innerHTML = '<span class="addr-icon">&#x1F4CD;</span><span>' + data.address + '</span>';
+  } else {
+    addressEl.style.display = 'none';
+    addressEl.innerHTML = '';
+  }
+
   modalBox.querySelector('.modal-map').innerHTML =
     '<iframe src="' + data.mapsEmbed + '" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
-  modalBox.querySelector('.modal-maps-link').href = data.mapsLink;
+
+  var linkWrap = modalBox.querySelector('.modal-link-wrap');
+  if (data.website) {
+    var href = data.website.indexOf('http') === 0 ? data.website : 'https://' + data.website;
+    linkWrap.innerHTML = '<a class="modal-link" href="' + href + '" target="_blank" rel="noopener">&#x1F310;&nbsp;' + data.website + '</a>';
+  } else {
+    linkWrap.innerHTML = '';
+  }
 
   document.body.classList.add('modal-active');
   modalOverlay.classList.add('is-open');
@@ -829,32 +960,50 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeModal();
 });
 
-var bakkerEl = document.getElementById('item-bakker');
-bakkerEl.addEventListener('click', function() { openModal('bakker'); });
-bakkerEl.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal('bakker'); }
+document.querySelectorAll('.item-clickable').forEach(function(el) {
+  var key = el.dataset.modalKey;
+  el.addEventListener('click', function() { openModal(key); });
+  el.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(key); }
+  });
 });
 
 /* ── Word overlay ── */
 const overlayWords = ['Welcome', 'Enjoy', 'Relax', 'Take your time'];
 let overlayIndex = 0;
 const overlayEl = document.getElementById('hero-overlay');
-const heroEl    = document.querySelector('.hero');
+
+// De hero-container volgt nu op mobiel altijd exact de beeldverhouding van de actieve
+// video/foto (zie updateHeroHeight), dus er blijft geen crème letterbox-ruimte meer
+// over — de veilige zone voor de tekst-overlay is daardoor gewoon de volledige
+// hero-box, zowel op mobiel als op desktop (cover, ook volledig gevuld).
+function getVisibleMediaRect() {
+  return { left: 0, top: 0, width: heroEl.offsetWidth, height: heroEl.offsetHeight };
+}
 
 function placeOverlayRandom() {
   var heroW = heroEl.offsetWidth;
   var heroH = heroEl.offsetHeight;
+  var rect  = getVisibleMediaRect();
   var elW   = overlayEl.offsetWidth;
   var elH   = overlayEl.offsetHeight;
-  var margin = 20;
+  // Kleinere tekst op mobiel heeft relatief minder buitenmarge nodig dan op desktop.
+  var margin = isLetterboxMode() ? 12 : 20;
 
-  var minL = (elW / 2 + margin) / heroW * 100;
-  var maxL = 100 - minL;
-  var minT = (elH / 2 + margin) / heroH * 100;
-  var maxT = 100 - minT;
+  var minLpx = rect.left + elW / 2 + margin;
+  var maxLpx = rect.left + rect.width - elW / 2 - margin;
+  var minTpx = rect.top + elH / 2 + margin;
+  var maxTpx = rect.top + rect.height - elH / 2 - margin;
 
-  overlayEl.style.left = (minL + Math.random() * (maxL - minL)).toFixed(1) + '%';
-  overlayEl.style.top  = (minT + Math.random() * (maxT - minT)).toFixed(1) + '%';
+  // Vangnet voor een erg smalle zichtbare strook: val terug op het midden i.p.v. NaN-range.
+  if (maxLpx < minLpx) { minLpx = maxLpx = rect.left + rect.width / 2; }
+  if (maxTpx < minTpx) { minTpx = maxTpx = rect.top + rect.height / 2; }
+
+  var leftPx = minLpx + Math.random() * (maxLpx - minLpx);
+  var topPx  = minTpx + Math.random() * (maxTpx - minTpx);
+
+  overlayEl.style.left = (leftPx / heroW * 100).toFixed(1) + '%';
+  overlayEl.style.top  = (topPx / heroH * 100).toFixed(1) + '%';
 }
 
 function showNextOverlayWord() {

@@ -67,19 +67,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .gantt-meta{font-size:12px;color:#888;margin-bottom:12px;}
 .today-line{position:absolute;top:36px;bottom:16px;width:2px;background:#d23a3a;z-index:5;}
 .today-label{position:absolute;top:18px;font-size:10px;color:#d23a3a;font-weight:600;white-space:nowrap;transform:translateX(-50%);}
+
+/* Tab 4: locatiegegevens */
+.loc-wrap{margin-bottom:24px;}
+.loc-wrap:last-child{margin-bottom:0;}
+.loc-title{font-size:15px;font-weight:600;color:#0F4C5C;margin-bottom:10px;}
+.loc-table-card{background:#fff;border:1px solid #e2e0d8;border-radius:10px;overflow-x:auto;}
+table.loc-table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px;}
+.loc-table th{text-align:left;font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.02em;padding:10px 12px;background:#fafaf7;border-bottom:1px solid #eee;white-space:nowrap;}
+.loc-table td{padding:10px 12px;border-bottom:1px solid #f2f2f2;color:#444;vertical-align:top;}
+.loc-table tr:last-child td{border-bottom:none;}
+.loc-table td.loc-done-cell{text-align:center;}
+.loc-row.done td{color:#aaa;}
+.loc-row.done td a{color:#aaa;}
+.loc-table td a{color:#1B6E8C;text-decoration:none;}
+.loc-table td a:hover{text-decoration:underline;}
+.loc-check{width:20px;height:20px;border-radius:6px;border:1.5px solid #ccc;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:transparent;font-size:13px;background:#fff;}
+.loc-check.checked{background:#1B6E8C;border-color:#1B6E8C;color:#fff;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
     <h1>Portugal NOP — Projectdashboard</h1>
-    <p>Gastensite vakantiehuisje Carvoeiro · Jefferson Synapps · bijgewerkt 25 juni 2026</p>
+    <p>Gastensite vakantiehuisje Carvoeiro · Jefferson Synapps · bijgewerkt 1 juli 2026</p>
   </div>
 
   <div class="tabs">
     <button class="tab active" data-tab="taken">Takenlijst</button>
     <button class="tab" data-tab="vragen">Open vragen &amp; besluiten</button>
     <button class="tab" data-tab="gantt">Planning</button>
+    <button class="tab" data-tab="locatie">Locatiegegevens</button>
   </div>
 
   <!-- TAB 1: TAKENLIJST -->
@@ -103,6 +121,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="legend-item"><div class="legend-dot" style="background:#7F77DD"></div>Nog te doen</div>
       <div class="legend-item" style="color:#d23a3a">| Vandaag (25 juni 2026)</div>
     </div>
+  </div>
+
+  <!-- TAB 4: LOCATIEGEGEVENS -->
+  <div class="panel" id="locatie">
+    <div id="loc-tables"></div>
   </div>
 
 </div>
@@ -198,6 +221,26 @@ const qaItems = [
     a: "In WhatsApp genoemd als 'wat leuke Instagram pagina specifiek voor deze regio' — geen namen gegeven. Navragen welke."
   },
   {
+    tag: "open", tagLabel: "open",
+    q: "Klopt de naam/locatie van restaurant Avola? Niet online vindbaar.",
+    a: "Geen enkel restaurant met deze naam in Carvoeiro of omgeving gevonden via websearch. Navragen bij klant of naam/locatie klopt."
+  },
+  {
+    tag: "open", tagLabel: "open",
+    q: "Is Manoels een apart restaurant naast Black Salt, of hoort het er bij / andere naam bedoeld?",
+    a: "Niet vindbaar als zelfstandig restaurant. Mogelijk verwarring met Black Salt (zelfde omgeving) of een andere naam bedoeld. Navragen bij klant."
+  },
+  {
+    tag: "open", tagLabel: "open",
+    q: "Bestaat Xamor nog als bar naast Levels, of is dit verouderd?",
+    a: "Levels Beach Bar is bevestigd, Xamor niet apart terug te vinden. Navragen of deze nog bestaat of verouderd is."
+  },
+  {
+    tag: "open", tagLabel: "open",
+    q: "Klopt 'Mais Perto' als supermarktnaam? Niet online vindbaar.",
+    a: "Niet terug te vinden als winkelketen. Navragen bij klant of de naam klopt."
+  },
+  {
     tag: "decided", tagLabel: "besloten",
     q: "Hosting: GitHub Pages",
     a: "Gratis, snel, levert werkende mobiele link op zonder gedoe. Geen HTML-bestand via WhatsApp."
@@ -223,6 +266,103 @@ const qaItems = [
     a: "Verdienmodel-vraag, geen technische taak. Bespreken met klant zodra de site staat."
   }
 ];
+
+const locationData = {
+  boodschappen: {
+    title: "Boodschappen & shoppen",
+    items: [
+      { naam: "Apolonia", adres: "EN 124-1, Urbanização do Gramital Lote 2, 8400-428 Lagoa", web: "apolonia.com", opm: "Mooiste supermarkt, wel duur. Tussen Lagoa en Carvoeiro, ~7 min rijden", done: true },
+      { naam: "Aldi", adres: "R. dos Pescadores, Sítio das Lagoinhas, EN 124-1 Gramital, 8400-395 Lagoa", web: "aldi.pt", opm: "Naast Apolonia, ~7 min rijden", done: true },
+      { naam: "Intermarché", adres: "Estrada de Carvoeiro, Poço Partido, 8400-557 Lagoa", web: "intermarche.pt/lojas/faro/02357-lagoa-carvoeiro", opm: "Dichtstbijzijnde grote supermarkt van Carvoeiro", done: true },
+      { naam: "Twee kleine winkeltjes", adres: "Rua dos Pescadores, Carvoeiro", web: "—", opm: "Geen exact huisnummer vindbaar, kleine lokale winkels", done: true },
+      { naam: "Mais Perto", adres: "Bij Monte Dourado, Carvoeiro", web: "—", opm: "Niet online vindbaar als winkelketen — navragen bij klant of naam klopt", done: true },
+      { naam: "Padaria Fabrica Velha", adres: "R. dos Pescadores 7, 8400-512 Carvoeiro", web: "—", opm: "Bakker, ingaande hoofdweg. Website pastelariafabricavelha.pt werkt niet (verwijderd)", done: true },
+      { naam: "MAR Shopping centre / Designer Outlet", adres: "Loulé", web: "marshopping.com/algarve", opm: "—", done: true },
+      { naam: "Forum Algarve", adres: "Faro", web: "forumalgarve.net", opm: "—", done: true }
+    ]
+  },
+  eten: {
+    title: "Eten & drinken",
+    items: [
+      { naam: "Levels Beach Bar", adres: "Largo da Praia 8, Carvoeiro", web: "levelscarvoeiro.com", opm: "Aan het strand, 3 verdiepingen" },
+      { naam: "Tapas da Vila", adres: "Rampa Sra. da Encarnação 5, Carvoeiro", web: "instagram.com/tapas_da_vila", opm: "Boulevard, uitzicht op strand" },
+      { naam: "Avola", adres: "Onbekend", web: "—", opm: "NIET online vindbaar als restaurant — navragen bij klant of naam/locatie klopt" },
+      { naam: "Mar de Fora", adres: "Estrada do Paraíso s/n, 8400-522 Carvoeiro", web: "instagram.com/mardfora.restaurantebar", opm: 'Klant schreef "Mar de Flora" — juiste naam is Mar de Fora (typefout in origineel)' },
+      { naam: "Black Salt", adres: "Urbanização Monte Carvoeiro Lote 4, 8400-558 Carvoeiro", web: "hotspotsalgarve.com/restaurants/black-salt-bistro", opm: "—" },
+      { naam: "Manoels", adres: "Onbekend", web: "—", opm: "NIET vindbaar als apart restaurant — mogelijk hoort dit bij Black Salt of is een andere naam bedoeld. Navragen bij klant" },
+      { naam: "Etxea", adres: "R. dos Pescadores 33, 8400-512 Carvoeiro", web: "etxearestaurant.com", opm: "Portugees-Baskische fusion" },
+      { naam: "Encci", adres: "Rampa Mato Serrão 3, 8400-521 Carvoeiro", web: "encci.pt", opm: "Brunch + pizza" },
+      { naam: "Skybar 360", adres: "Largo da Praia 1, Carvoeiro (Hotel Carvoeiro Plaza)", web: "instagram.com/skybar.360", opm: 'Let op: dit is NIET dezelfde als "Sky Bar" bij Tivoli Carvoeiro Resort — twee verschillende rooftop bars' },
+      { naam: "MatabiXO bar", adres: "R. dos Pescadores 2, 8400 Carvoeiro", web: "—", opm: "Hoofdplein" },
+      { naam: "Levels & Xamor", adres: "Levels: zie boven. Xamor: niet apart vindbaar", web: "—", opm: "Xamor niet bevestigd — navragen bij klant" },
+      { naam: "Engelse pubs", adres: "Diverse, Carvoeiro centrum", web: "—", opm: "Geen specifieke naam gegeven door klant" }
+    ]
+  },
+  tedoen: {
+    title: "Te doen",
+    items: [
+      { naam: "Boardwalk naar Algar Seco Rocks", adres: "Start bij Forte de Nossa Senhora da Encarnação, Carvoeiro", web: "—", opm: "600m wandelpad langs de klif" },
+      { naam: "Praia do Paraíso", adres: "Estrada do Paraíso 19, Carvoeiro", web: "—", opm: "Onder Mar de Fora restaurant" },
+      { naam: "Benagil Caves", adres: "Benagil, Lagoa (boot vertrekt vanaf Carvoeiro strand)", web: "carvoeirocaves.com", opm: "Ook per boot vanuit Carvoeiro zelf" },
+      { naam: "Ferragudo + Praia Grande", adres: "Ferragudo, ~20 min rijden", web: "—", opm: "—" },
+      { naam: "Portimão", adres: "Portimão, ~20 min rijden", web: "—", opm: "—" },
+      { naam: "Slide & Splash Waterpark", adres: "Vale de Deus, Lagoa, ~10 min rijden", web: "slidesplash.com", opm: "—" },
+      { naam: "Silves", adres: "Silves, ~25 min rijden", web: "—", opm: "Moors kasteel" },
+      { naam: "Monchique", adres: "Monchique, ~45 min rijden", web: "—", opm: "Natuurwandeling" },
+      { naam: "Albufeira", adres: "Albufeira, ~45 min rijden", web: "—", opm: "—" },
+      { naam: "Villamoura haven", adres: "Vilamoura, ~50 min rijden", web: "—", opm: "—" },
+      { naam: "Sagres + Cabo de São Vicente", adres: "Sagres, ~60 min rijden", web: "—", opm: "Meest zuidwestelijke punt van Europa" },
+      { naam: "Faro + Ria Formosa", adres: "Faro, ~60 min rijden", web: "—", opm: "—" }
+    ]
+  }
+};
+
+function locLink(val){
+  if(!val || val === '—') return '—';
+  const href = val.startsWith('http') ? val : `https://${val}`;
+  return `<a href="${href}" target="_blank" rel="noopener">${val}</a>`;
+}
+
+function getLocDone(){
+  try{ return JSON.parse(localStorage.getItem('locDone') || '{}'); }catch(e){ return {}; }
+}
+
+function setLocDone(map){
+  localStorage.setItem('locDone', JSON.stringify(map));
+}
+
+function renderLocationTables(){
+  const wrap = document.getElementById('loc-tables');
+  const done = getLocDone();
+  wrap.innerHTML = Object.entries(locationData).map(([key, cat]) => `
+    <div class="loc-wrap">
+      <h2 class="loc-title">${cat.title}</h2>
+      <div class="loc-table-card">
+        <table class="loc-table">
+          <tr><th>Naam</th><th>Adres</th><th>Website/Social</th><th>Opmerking</th><th style="text-align:center;">Gedaan</th></tr>
+          ${cat.items.map((it,i)=>{
+            const id = `${key}-${i}`;
+            const isDone = done.hasOwnProperty(id) ? !!done[id] : !!it.done;
+            return `<tr class="loc-row ${isDone ? 'done' : ''}">
+              <td>${it.naam}</td>
+              <td>${it.adres}</td>
+              <td>${locLink(it.web)}</td>
+              <td>${it.opm}</td>
+              <td class="loc-done-cell"><span class="loc-check ${isDone ? 'checked' : ''}" onclick="toggleLocDone('${id}')"><i class="ti ti-check" aria-hidden="true"></i></span></td>
+            </tr>`;
+          }).join('')}
+        </table>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleLocDone(id){
+  const done = getLocDone();
+  done[id] = !done[id];
+  setLocDone(done);
+  renderLocationTables();
+}
 
 function statusBadge(status){
   if(status === 'done') return '<span class="status-badge status-done">klaar</span>';
@@ -355,6 +495,13 @@ document.querySelectorAll('.tab').forEach(tab=>{
 renderPhases();
 renderQA();
 renderGantt();
+renderLocationTables();
+
+const initialTab = location.hash.replace('#','');
+if(initialTab){
+  const initialTabBtn = document.querySelector(`.tab[data-tab="${initialTab}"]`);
+  if(initialTabBtn) initialTabBtn.click();
+}
 </script>
 </body>
 </html>
