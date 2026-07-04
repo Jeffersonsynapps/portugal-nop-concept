@@ -8,6 +8,7 @@
   --teal: #1B6E6D;
   --teal-dark: #134E4E;
   --teal-light: #C5E0DF;
+  --band-tint: #EEF6F5;
   --text: #2C2C2C;
   --text-light: #5A5A5A;
 }
@@ -484,6 +485,17 @@ body.modal-active { overflow: hidden; }
   max-width: 1040px;
   margin: 0 auto;
   padding: 32px 24px;
+}
+
+/* Extra lucht boven de footer: dit is de laatste sectie vóór de groene balk */
+#gallery-omgeving {
+  padding-bottom: 80px;
+}
+
+/* ── Swimlane: subtiele achtergrondband ter afbakening van een sectie ── */
+.swimlane {
+  background: var(--band-tint);
+  padding: 32px 0;
 }
 
 /* ── Fotostrip: toolbar + carrousel ── */
