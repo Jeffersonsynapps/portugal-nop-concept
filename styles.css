@@ -547,6 +547,12 @@ body.modal-active { overflow: hidden; }
   .carousel-slide { flex-basis: 82%; }
 }
 
+/* Mobiel-portret: geen gedeeltelijke volgende/vorige foto meer aan de rand — 1 foto
+   volledige breedte per keer, bladeren gebeurt dan per foto i.p.v. per groep. */
+@media (max-width: 480px) {
+  .carousel-slide { flex-basis: 100%; }
+}
+
 .carousel-arrow {
   position: absolute;
   top: 50%;
